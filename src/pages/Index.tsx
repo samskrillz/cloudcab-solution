@@ -4,6 +4,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import StatsCard from "@/components/dashboard/StatsCard";
 import ActiveDriversList from "@/components/dashboard/ActiveDriversList";
 import LiveMap from "@/components/dashboard/LiveMap";
+import BookingsList from "@/components/dashboard/BookingsList";
 import { Car, Users, DollarSign, Clock } from "lucide-react";
 
 const Index = () => {
@@ -48,6 +49,10 @@ const Index = () => {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
               <LiveMap />
               <ActiveDriversList />
+            </div>
+
+            <div className="mt-6">
+              <BookingsList />
             </div>
           </div>
         </main>
