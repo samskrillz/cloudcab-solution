@@ -3,6 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { supabase } from "@/integrations/supabase/client";
 import type { Tables } from "@/integrations/supabase/types";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 type Vehicle = Tables<"vehicles">;
 
@@ -11,6 +12,7 @@ const LiveMap = () => {
   const map = useRef<mapboxgl.Map | null>(null);
   const markersRef = useRef<{ [key: string]: mapboxgl.Marker }>({});
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -60,17 +62,23 @@ const LiveMap = () => {
 
   const fetchVehicles = async () => {
     try {
+      setError(null);
       const { data, error } = await supabase
         .from('vehicles')
         .select('*')
-        .not('last_location', 'is', null);
+        .filter('last_location', 'not.is', null);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase error:', error);
+        throw new Error(error.message);
+      }
 
       setVehicles(data);
       data.forEach(vehicle => updateVehicleMarker(vehicle));
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'An error occurred while fetching vehicles';
       console.error('Error fetching vehicles:', error);
+      setError(errorMessage);
     }
   };
 
@@ -116,6 +124,11 @@ const LiveMap = () => {
       <div className="p-4 border-b">
         <h2 className="text-lg font-semibold">Live Fleet Tracking</h2>
       </div>
+      {error && (
+        <Alert variant="destructive" className="m-4">
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
       <div ref={mapContainer} className="w-full h-[500px]" />
     </div>
   );
