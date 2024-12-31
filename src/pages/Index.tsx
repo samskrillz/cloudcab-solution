@@ -3,6 +3,7 @@ import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import StatsCard from "@/components/dashboard/StatsCard";
 import ActiveDriversList from "@/components/dashboard/ActiveDriversList";
+import LiveMap from "@/components/dashboard/LiveMap";
 import { Car, Users, DollarSign, Clock } from "lucide-react";
 
 const Index = () => {
@@ -44,12 +45,9 @@ const Index = () => {
               />
             </div>
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+              <LiveMap />
               <ActiveDriversList />
-              <div className="bg-white rounded-lg shadow-sm border p-4">
-                <h2 className="text-lg font-semibold mb-4">Recent Activity</h2>
-                <p className="text-gray-500">Coming soon...</p>
-              </div>
             </div>
           </div>
         </main>
