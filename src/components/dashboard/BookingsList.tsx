@@ -6,10 +6,15 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-type Booking = Tables<"bookings">;
+type Profile = Tables<"profiles">;
+
+interface BookingWithRelations extends Tables<"bookings"> {
+  customer: Pick<Profile, "full_name"> | null;
+  driver: Pick<Profile, "full_name"> | null;
+}
 
 const BookingsList = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
+  const [bookings, setBookings] = useState<BookingWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchBookings = async () => {
@@ -127,7 +132,7 @@ const BookingsList = () => {
             {bookings.map((booking) => (
               <TableRow key={booking.id}>
                 <TableCell>
-                  {(booking.customer as any)?.full_name || "Unknown"}
+                  {booking.customer?.full_name || "Unknown"}
                 </TableCell>
                 <TableCell>{booking.pickup_address}</TableCell>
                 <TableCell>{booking.dropoff_address}</TableCell>
@@ -137,7 +142,7 @@ const BookingsList = () => {
                   </span>
                 </TableCell>
                 <TableCell>
-                  {(booking.driver as any)?.full_name || "Unassigned"}
+                  {booking.driver?.full_name || "Unassigned"}
                 </TableCell>
                 <TableCell>
                   {booking.status === "pending" && (
